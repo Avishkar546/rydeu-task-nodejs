@@ -20,6 +20,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 import pricingRouter from './routes/pricing.routes.js';
+import { Pricing } from './models/price.models.js';
 app.use("/api/v1/price", pricingRouter);
 
 export { app };

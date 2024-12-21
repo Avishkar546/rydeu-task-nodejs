@@ -7,21 +7,27 @@ import { getDistanceBetween } from './../utils/geo_coding.utils.js';
 
 export const checkPricingController = asyncHandler(async (req, res) => {
     // res.send("Test pricing");
-    const { origin, destination, city } = req.body;
+    const { origin, destination, city, vehicleType } = req.body;
 
     if (!origin || !destination || !city) {
         throw new ApiError(400, "origin, destination, city all fields required");
     }
 
     try {
-        const cityData = await Pricing.findOne({ city });
+        const cityData = await Pricing.find({
+            "$and": [
+                { "city": city },
+                { vehicleType }
+            ]
+        });
+        console.log(cityData);
 
         if (!cityData) {
             throw new ApiError(404, "City not found in the database");
         }
 
-        const distance = await getDistanceBetween(origin, destination);
-        console.log(distance);
+        const distance = await getDistanceBetween(origin, destination, city, cityData?.Country);
+        console.log("Distance: ", distance);
 
         if (distance > 1000) {
             return res.status(200).json(new ApiResponse(200, "Too far to offer ride"));
@@ -29,6 +35,7 @@ export const checkPricingController = asyncHandler(async (req, res) => {
 
         let emailNeeded = false;
         let rideAmount = cityData.amountPerKM * distance;
+        console.log("rideAmount: ", rideAmount);
         if (distance > 30 || rideAmount < 50 || !cityData.isCityFlagged) {
             emailNeeded = true;
         }
