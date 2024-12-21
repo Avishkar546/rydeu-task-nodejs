@@ -2,6 +2,7 @@ import { Pricing } from "../models/price.models.js";
 import { ApiError } from "../utils/apiError.utils.js";
 import { ApiResponse } from "../utils/apiResponse.utils.js";
 import { asyncHandler } from "../utils/asyncHandler.utils.js";
+import { getDistanceBetween } from './../utils/geo_coding.utils.js';
 
 
 export const checkPricingController = asyncHandler(async (req, res) => {

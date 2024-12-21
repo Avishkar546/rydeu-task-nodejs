@@ -41,7 +41,7 @@ export const getDistanceBetween = async (origin, destination) => {
         );
 
         if (response.status == 200) {
-              console.log(response.data);
+            //   console.log(response.data);
             //   console.log(response.data.body.distance.kilometers);
             return response.data.body.distance.kilometers;
         }
